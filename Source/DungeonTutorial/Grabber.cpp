@@ -46,20 +46,8 @@ void UGrabber::Grab()
 		return;
 	}
 
-	FVector Start = GetComponentLocation();
-	FVector End = Start + GetForwardVector() * MaxGrabDistance;
-	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
-
-	FCollisionShape Sphere = FCollisionShape::MakeSphere(GrabRadius);
 	FHitResult HitResult;
-	// The trace channel was found in the actual program folder files in a file called DefaultEngine.ini...searched for Grabber
-	bool HasHit = GetWorld()->SweepSingleByChannel(
-		HitResult,
-		Start, End,
-		FQuat::Identity,
-		ECC_GameTraceChannel2,
-		Sphere
-	);
+	bool HasHit = GetGrabbableInReach(HitResult);
 
 	if (HasHit)
 	{
@@ -82,6 +70,22 @@ UPhysicsHandleComponent* UGrabber::GetPhysicsHandle() const
 		UE_LOG(LogTemp, Warning, TEXT("Grabber requires a UPhysicsHandleComponent."))
 	}
 	return Result;
+}
+
+bool UGrabber::GetGrabbableInReach(FHitResult& OutHitResult) const
+{
+	FVector Start = GetComponentLocation();
+	FVector End = Start + GetForwardVector() * MaxGrabDistance;
+	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
+	FCollisionShape Sphere = FCollisionShape::MakeSphere(GrabRadius);
+	// The trace channel was found in the actual program folder files in a file called DefaultEngine.ini...searched for Grabber
+	return GetWorld()->SweepSingleByChannel(
+		OutHitResult,
+		Start, End,
+		FQuat::Identity,
+		ECC_GameTraceChannel2,
+		Sphere
+	);
 }
 
 void UGrabber::Release()
