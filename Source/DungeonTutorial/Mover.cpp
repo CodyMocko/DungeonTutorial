@@ -8,8 +8,6 @@ UMover::UMover()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
@@ -36,5 +34,10 @@ void UMover::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponent
 		FVector NewLocation = FMath::VInterpConstantTo(CurrentLocation, TargetLocation, DeltaTime, Speed);
 		GetOwner()->SetActorLocation(NewLocation);
 	}
+}
+
+void UMover::SetShouldMove(bool NewShouldMove)
+{
+	ShouldMove = NewShouldMove;
 }
 

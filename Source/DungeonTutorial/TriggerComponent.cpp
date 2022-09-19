@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "GameFramework/Actor.h"
 #include "TriggerComponent.h"
 
 UTriggerComponent::UTriggerComponent()
@@ -24,12 +24,25 @@ void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 	if (ActorFound != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Unlocking"));
+		// This will check if the ActorFound is a Uprimitive component...the goal is to turn off the physics of the statue once it is in the overlap event and have it attach to the moving actor
+		UPrimitiveComponent* Component = Cast<UPrimitiveComponent>(ActorFound->GetRootComponent());
+		if (Component != nullptr) 
+		{
+			Component->SetSimulatePhysics(false);
+		}
+		ActorFound->AttachToComponent(this, FAttachmentTransformRules::KeepWorldTransform);
+		Mover->SetShouldMove(true);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Relocking"));
+		Mover->SetShouldMove(false);
 	}
+}
+
+void UTriggerComponent::SetMover(UMover* NewMover)
+{
+	Mover = NewMover;
+
 }
 
 AActor* UTriggerComponent::GetAcceptableActor() const
