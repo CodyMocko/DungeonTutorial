@@ -51,7 +51,10 @@ AActor* UTriggerComponent::GetAcceptableActor() const
 	GetOverlappingActors(Actors);
 	for (AActor* Actor : Actors)
 	{
-		if (Actor->ActorHasTag(AcceptableActorTag))
+		bool HasAcceptableTag = Actor->ActorHasTag(AcceptableActorTag);
+		bool IsGrabbed = Actor->ActorHasTag("Grabbed");
+		/*if (Actor->ActorHasTag(AcceptableActorTag) && !Actor->ActorHasTag("Grabbed")*/
+		if (HasAcceptableTag && !IsGrabbed)
 		{
 			return Actor;
 		}
